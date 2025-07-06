@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Neon Roll - Casino Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="neon-logo">
+            <h1>NEON ROLL</h1>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app" class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <img id="user-avatar" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM2NjY2NjYiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDEyQzE0LjIwOTEgMTIgMTYgMTAuMjA5MSAxNiA4QzE2IDUuNzkwODYgMTQuMjA5MSA0IDEyIDRDOS43OTA4NiA0IDggNS43OTA4NiA4IDhDOCAxMC4yMDkxIDkuNzkwODYgMTIgMTIgMTJaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTIgMTRDOC42ODYyOSAxNCA2IDE2LjY4NjMgNiAyMFYyMkMxOCAyMiAxOCAyMiAxOCAyMFYyMEMxOCAxNi42ODYzIDE1LjMxMzcgMTQgMTIgMTRaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4KPC9zdmc+" alt="User">
+                </div>
+                <div class="user-details">
+                    <span id="user-name">Loading...</span>
+                </div>
+            </div>
+            <div class="balance-container">
+                <div class="balance-icon">💰</div>
+                <span id="user-balance">0.00 AI</span>
+            </div>
+        </header>
+
+        <!-- Game Section -->
+        <section id="game-section" class="game-section active">
+            <!-- Rolling Timer -->
+            <div class="rolling-timer">
+                <div class="timer-text">ROLLING IN</div>
+                <div id="timer-value" class="timer-value">13.62</div>
+                <div class="timer-arrow">▼</div>
+            </div>
+
+            <!-- Game Grid -->
+            <div class="game-grid">
+                <div class="color-block red" data-color="red"></div>
+                <div class="color-block blue" data-color="blue"></div>
+                <div class="color-block green" data-color="green"></div>
+                <div class="color-block red" data-color="red"></div>
+                <div class="color-block yellow" data-color="yellow"></div>
+                <div class="color-block blue" data-color="blue"></div>
+                <div class="color-block green" data-color="green"></div>
+                <div class="color-block red" data-color="red"></div>
+                <div class="color-block blue" data-color="blue"></div>
+            </div>
+
+            <!-- Game Result Notification -->
+            <div id="game-notification" class="game-notification hidden">
+                <div class="notification-content">
+                    <h3>The game has started</h3>
+                </div>
+            </div>
+
+            <!-- Last 5 Games -->
+            <div class="recent-games">
+                <span>Last 5 games:</span>
+                <div id="recent-games-indicators" class="game-indicators">
+                    <div class="indicator red"></div>
+                    <div class="indicator blue"></div>
+                    <div class="indicator blue"></div>
+                    <div class="indicator green"></div>
+                    <div class="indicator blue"></div>
+                </div>
+            </div>
+
+            <!-- Players/Bets Section -->
+            <div class="players-section">
+                <div class="section-header">
+                    <span>Players/Bets ▼</span>
+                    <span>History</span>
+                </div>
+                <div id="players-list" class="players-list">
+                    <!-- Players will be dynamically loaded -->
+                </div>
+            </div>
+
+            <!-- Betting Controls -->
+            <div class="betting-controls">
+                <div class="bet-amount-controls">
+                    <button class="bet-control-btn" data-action="min">Min</button>
+                    <button class="bet-control-btn" data-action="half">1/2</button>
+                    <input type="number" id="bet-amount" class="bet-amount-input" value="5" min="1">
+                    <button class="bet-control-btn" data-action="double">x2</button>
+                    <button class="bet-control-btn" data-action="max">Max</button>
+                </div>
+
+                <div class="multiplier-buttons">
+                    <button class="multiplier-btn red" data-color="red" data-multiplier="2.2">
+                        Win x2.2
+                    </button>
+                    <button class="multiplier-btn green" data-color="green" data-multiplier="5">
+                        Win x5
+                    </button>
+                    <button class="multiplier-btn blue" data-color="blue" data-multiplier="2.2">
+                        Win x2.2
+                    </button>
+                    <button class="multiplier-btn yellow" data-color="yellow" data-multiplier="45">
+                        Win x45
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Deposit Section -->
+        <section id="deposit-section" class="section hidden">
+            <div class="section-title">TOP UP BALANCE</div>
+            <div class="crypto-grid">
+                <div class="crypto-option" data-crypto="ton">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiMwMDhCRkYiLz4KPHBhdGggZD0iTTI4IDEySDEyQzEwLjg5NTQgMTIgMTAgMTIuODk1NCAxMCAxNFYyNkMxMCAyNy4xMDQ2IDEwLjg5NTQgMjggMTIgMjhIMjhDMjkuMTA0NiAyOCAzMCAyNy4xMDQ2IDMwIDI2VjE0QzMwIDEyLjg5NTQgMjkuMTA0NiAxMiAyOCAxMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg==" alt="TON">
+                    <div class="crypto-name">TON</div>
+                </div>
+                <div class="crypto-option" data-crypto="usdt">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM1MEFGOTUiLz4KPHBhdGggZD0iTTI4IDEySDEyQzEwLjg5NTQgMTIgMTAgMTIuODk1NCAxMCAxNFYyNkMxMCAyNy4xMDQ2IDEwLjg5NTQgMjggMTIgMjhIMjhDMjkuMTA0NiAyOCAzMCAyNy4xMDQ2IDMwIDI2VjE0QzMwIDEyLjg5NTQgMjkuMTA0NiAxMiAyOCAxMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg==" alt="USDT">
+                    <div class="crypto-name">Tether TRC20</div>
+                </div>
+                <div class="crypto-option" data-crypto="trx">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNGRjIzMzMiLz4KPHBhdGggZD0iTTI4IDEySDEyQzEwLjg5NTQgMTIgMTAgMTIuODk1NCAxMCAxNFYyNkMxMCAyNy4xMDQ2IDEwLjg5NTQgMjggMTIgMjhIMjhDMjkuMTA0NiAyOCAzMCAyNy4xMDQ2IDMwIDI2VjE0QzMwIDEyLjg5NTQgMjkuMTA0NiAxMiAyOCAxMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg==" alt="TRX">
+                    <div class="crypto-name">TRON</div>
+                </div>
+                <div class="crypto-option" data-crypto="bnb">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNGM0JBMkYiLz4KPHBhdGggZD0iTTI4IDEySDEyQzEwLjg5NTQgMTIgMTAgMTIuODk1NCAxMCAxNFYyNkMxMCAyNy4xMDQ2IDEwLjg5NTQgMjggMTIgMjhIMjhDMjkuMTA0NiAyOCAzMCAyNy4xMDQ2IDMwIDI2VjE0QzMwIDEyLjg5NTQgMjkuMTA0NiAxMiAyOCAxMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg==" alt="BNB">
+                    <div class="crypto-name">BNB</div>
+                </div>
+                <div class="crypto-option" data-crypto="btc">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNGNzkzMUEiLz4KPHBhdGggZD0iTTI4IDEySDEyQzEwLjg5NTQgMTIgMTAgMTIuODk1NCAxMCAxNFYyNkMxMCAyNy4xMDQ2IDEwLjg5NTQgMjggMTIgMjhIMjhDMjkuMTA0NiAyOCAzMCAyNy4xMDQ2IDMwIDI2VjE0QzMwIDEyLjg5NTQgMjkuMTA0NiAxMiAyOCAxMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg==" alt="Bitcoin">
+                    <div class="crypto-name">Bitcoin</div>
+                </div>
+                <div class="crypto-option" data-crypto="doge">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNDMkEzMzMiLz4KPHBhdGggZD0iTTI4IDEySDEyQzEwLjg5NTQgMTIgMTAgMTIuODk1NCAxMCAxNFYyNkMxMCAyNy4xMDQ2IDEwLjg5NTQgMjggMTIgMjhIMjhDMjkuMTA0NiAyOCAzMCAyNy4xMDQ2IDMwIDI2VjE0QzMwIDEyLjg5NTQgMjkuMTA0NiAxMiAyOCAxMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg==" alt="DOGE">
+                    <div class="crypto-name">DOGE</div>
+                </div>
+                <div class="crypto-option" data-crypto="ltc">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiMzNDU5OTQiLz4KPHBhdGggZD0iTTI4IDEySDEyQzEwLjg5NTQgMTIgMTAgMTIuODk1NCAxMCAxNFYyNkMxMCAyNy4xMDQ2IDEwLjg5NTQgMjggMTIgMjhIMjhDMjkuMTA0NiAyOCAzMCAyNy4xMDQ2IDMwIDI2VjE0QzMwIDEyLjg5NTQgMjkuMTA0NiAxMiAyOCAxMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg==" alt="Litecoin">
+                    <div class="crypto-name">Litecoin</div>
+                </div>
+                <div class="crypto-option" data-crypto="usdc">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiMyNzc1Q0EiLz4KPHBhdGggZD0iTTI4IDEySDEyQzEwLjg5NTQgMTIgMTAgMTIuODk1NCAxMCAxNFYyNkMxMCAyNy4xMDQ2IDEwLjg5NTQgMjggMTIgMjhIMjhDMjkuMTA0NiAyOCAzMCAyNy4xMDQ2IDMwIDI2VjE0QzMwIDEyLjg5NTQgMjkuMTA0NiAxMiAyOCAxMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg==" alt="USDC">
+                    <div class="crypto-name">USDC ERC20</div>
+                </div>
+            </div>
+
+            <!-- Deposit Details -->
+            <div id="deposit-details" class="deposit-details hidden">
+                <div class="back-button">← Choose another method</div>
+                <div class="deposit-title">Deposit via <span id="selected-crypto">TON</span></div>
+                <div class="deposit-info">
+                    <p>We have generated your personal wallet, which you can use to top up your balance.</p>
+                    <p>Send any amount greater than $3 to this wallet, and it will automatically be credited to your balance.</p>
+                </div>
+                <div class="wallet-address">
+                    <div id="wallet-address-text">UQAYxMEw3LEdoV6fQ0xYf962boGFqlNnbAUCLL7zq6ks</div>
+                    <button class="copy-wallet-btn">✅ Wallet copied ✅</button>
+                </div>
+                <div class="exchange-rate">
+                    Exchange rate <span id="exchange-rate">1 TON = 316.06 AI</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Withdraw Section -->
+        <section id="withdraw-section" class="section hidden">
+            <div class="section-title">WITHDRAWAL</div>
+            <div class="crypto-grid">
+                <div class="crypto-option" data-crypto="ltc">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiMzNDU5OTQiLz4KPHBhdGggZD0iTTI4IDEySDEyQzEwLjg5NTQgMTIgMTAgMTIuODk1NCAxMCAxNFYyNkMxMCAyNy4xMDQ2IDEwLjg5NTQgMjggMTIgMjhIMjhDMjkuMTA0NiAyOCAzMCAyNy4xMDQ2IDMwIDI2VjE0QzMwIDEyLjg5NTQgMjkuMTA0NiAxMiAyOCAxMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg==" alt="Litecoin">
+                    <div class="crypto-name">LiteCoin</div>
+                    <div class="min-amount">[Min. 15 AI]</div>
+                </div>
+                <div class="crypto-option" data-crypto="trx">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNGRjIzMzMiLz4KPHBhdGggZD0iTTI4IDEySDEyQzEwLjg5NTQgMTIgMTAgMTIuODk1NCAxMCAxNFYyNkMxMCAyNy4xMDQ2IDEwLjg5NTQgMjggMTIgMjhIMjhDMjkuMTA0NiAyOCAzMCAyNy4xMDQ2IDMwIDI2VjE0QzMwIDEyLjg5NTQgMjkuMTA0NiAxMiAyOCAxMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg==" alt="TRX">
+                    <div class="crypto-name">TRON</div>
+                    <div class="min-amount">[Min. 41 AI]</div>
+                </div>
+                <div class="crypto-option" data-crypto="bnb">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNGM0JBMkYiLz4KPHBhdGggZD0iTTI4IDEySDEyQzEwLjg5NTQgMTIgMTAgMTIuODk1NCAxMCAxNFYyNkMxMCAyNy4xMDQ2IDEwLjg5NTQgMjggMTIgMjhIMjhDMjkuMTA0NiAyOCAzMCAyNy4xMDQ2IDMwIDI2VjE0QzMwIDEyLjg5NTQgMjkuMTA0NiAxMiAyOCAxMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg==" alt="BNB">
+                    <div class="crypto-name">BNB</div>
+                    <div class="min-amount">[Min. 29 AI]</div>
+                </div>
+                <div class="crypto-option" data-crypto="ton">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiMwMDhCRkYiLz4KPHBhdGggZD0iTTI4IDEySDEyQzEwLjg5NTQgMTIgMTAgMTIuODk1NCAxMCAxNFYyNkMxMCAyNy4xMDQ2IDEwLjg5NTQgMjggMTIgMjhIMjhDMjkuMTA0NiAyOCAzMCAyNy4xMDQ2IDMwIDI2VjE0QzMwIDEyLjg5NTQgMjkuMTA0NiAxMiAyOCAxMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg==" alt="TON">
+                    <div class="crypto-name">TON</div>
+                    <div class="min-amount">[Min. 27 AI]</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tasks Section -->
+        <section id="tasks-section" class="section hidden">
+            <div class="section-title">TASKS LIST</div>
+            
+            <div class="tasks-category">
+                <h3>Rewards for Friends</h3>
+                <div id="friend-tasks" class="tasks-list">
+                    <!-- Friend tasks will be dynamically loaded -->
+                </div>
+            </div>
+
+            <div class="tasks-category">
+                <h3>Betting Rewards</h3>
+                <div id="betting-tasks" class="tasks-list">
+                    <!-- Betting tasks will be dynamically loaded -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Friends Section -->
+        <section id="friends-section" class="section hidden">
+            <div class="section-title">REFERRAL PROGRAM</div>
+            
+            <div class="referral-info">
+                <p>For each active friend* (referred as referral) who joins through your link, you will receive a bonus of 3 AI. Additionally, you will receive a percentage of all their bets and even the bets of friends they invite, up to the 3rd level.</p>
+                
+                <p>There is no limit to your earnings. Even a few invited friends can bring you significant income.</p>
+                
+                <div class="commission-structure">
+                    <div>You will receive 5% of the bet amount from a 1st level referral;</div>
+                    <div>You will receive 1% of the bet amount from a 2nd level referral;</div>
+                    <div>You will receive 1% of the bet amount from a 3rd level referral;</div>
+                </div>
+                
+                <p>For example: if your referral bets 1000 AI, your profit will be 50 AI.</p>
+                
+                <p class="small-text">* Active friend - a referral who has placed 2 or more bets!</p>
+            </div>
+
+            <div class="invite-section">
+                <h3>INVITE FRIENDS IN 2 CLICKS:</h3>
+                <button id="invite-friends-btn" class="invite-btn">INVITE FRIENDS</button>
+                <p class="warning">IMPORTANT: To prevent fraud and abuse, commissions from bets are only credited for friends who have topped up their balance!</p>
+            </div>
+
+            <div class="referral-stats">
+                <h3>Your referrals by levels</h3>
+                <div class="level-stats">
+                    <div class="level-stat">
+                        <div class="level-title">1st lvl.</div>
+                        <div class="level-count">0 people.</div>
+                    </div>
+                    <div class="level-stat">
+                        <div class="level-title">2nd lvl.</div>
+                        <div class="level-count">0 people.</div>
+                    </div>
+                    <div class="level-stat">
+                        <div class="level-title">3rd lvl.</div>
+                        <div class="level-count">0 people.</div>
+                    </div>
+                </div>
+                
+                <div class="level-referrals">
+                    <h4>Your 1-level referrals</h4>
+                    <div class="no-referrals">You have no 1-level referrals</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-item" data-section="friends">
+                <div class="nav-icon">👥</div>
+                <span>Friends</span>
+            </div>
+            <div class="nav-item" data-section="deposit">
+                <div class="nav-icon">💰</div>
+                <span>Deposit</span>
+            </div>
+            <div class="nav-item active" data-section="game">
+                <div class="nav-icon">🎮</div>
+                <span>Play</span>
+            </div>
+            <div class="nav-item" data-section="withdraw">
+                <div class="nav-icon">💸</div>
+                <span>Withdraw</span>
+            </div>
+            <div class="nav-item" data-section="tasks">
+                <div class="nav-icon">📋</div>
+                <span>Tasks</span>
+            </div>
+        </nav>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
